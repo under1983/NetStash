@@ -1,11 +1,14 @@
 ﻿input {
-  tcp {
-    port => 1233
-    host => "10.32.12.52"
-  }
+tcp {
+    host => "listener.logz.io"
+    port => 5050
+    codec => json_lines
+}
 }
 filter {
-  mutate { gsub => ["message", "@($NL$)@", "\r\n"] }
+  mutate { gsub => ["message", "@($NL$)@", "\r\n"] ,
+  add_field => { "token" => "QfPKlorEAulNFrYLSpZtMNnlTPQItEvC" } 
+  }
   json { source => message }
 }
 output {
