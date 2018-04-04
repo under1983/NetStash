@@ -13,9 +13,10 @@ namespace NetStash.Log
         private string system = string.Empty;
         private string currentApp = string.Empty;
         private string currentAppVersion = string.Empty;
+        private string user = string.Empty;
 
 
-        public NetStashLog(string logstashIp, int logstashPort, string currentApp, string currentAppVersion )
+        public NetStashLog(string logstashIp, int logstashPort, string currentApp, string currentAppVersion, string User )
         {
             if (string.IsNullOrWhiteSpace(logstashIp))
                 throw new ArgumentNullException("logstashIp");
@@ -23,12 +24,13 @@ namespace NetStash.Log
             if (string.IsNullOrWhiteSpace(currentApp))
                 throw new ArgumentNullException("system");
 
-            Worker.TcpWorker.Initialize(logstashIp, logstashPort);
+            Worker.TcpWorker.Initialize(logstashIp, logstashPort, currentApp, currentAppVersion, User);
 
             this.logstashIp = logstashIp;
             this.logstashPort = logstashPort;
             this.currentApp = currentApp;
             this.currentAppVersion = currentAppVersion;
+            this.user = User;
         }
 
         public void Stop()
@@ -145,6 +147,7 @@ namespace NetStash.Log
             e.Source = system;
             e.App = currentApp;
             e.AppVersion = currentAppVersion;
+            e.Username = user;
 
             Storage.Proxy.LogProxy proxy = new Storage.Proxy.LogProxy();
             proxy.Add(e);
