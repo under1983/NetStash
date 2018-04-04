@@ -12,12 +12,11 @@ namespace SampleApp
     {
         static void Main(string[] args)
         {
-            NetStashLog log = new NetStashLog("brspomelkq01.la.imtn.com", 1233, "NSTest", "NSTestLog");
-            Dictionary<string, string> vals = new Dictionary<string, string>();
+            NetStashLog log = new NetStashLog("localhost", 1233, System.Diagnostics.Process.GetCurrentProcess().ProcessName, System.Diagnostics.Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion);
 
-            log.Error("Testing", vals);
+            log.Error("Testing", System.Reflection.MethodBase.GetCurrentMethod().Name);
 
-            Thread.Sleep(50000);
+            Thread.Sleep(50);
 
             log.Stop();
         }

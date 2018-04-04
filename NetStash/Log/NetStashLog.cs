@@ -10,26 +10,25 @@ namespace NetStash.Log
     {
         private string logstashIp = string.Empty;
         private int logstashPort = -1;
-        private string logname = string.Empty;
         private string system = string.Empty;
+        private string currentApp = string.Empty;
+        private string currentAppVersion = string.Empty;
 
-        public NetStashLog(string logstashIp, int logstashPort, string system, string logname = "NetStashLogs")
+
+        public NetStashLog(string logstashIp, int logstashPort, string currentApp, string currentAppVersion )
         {
             if (string.IsNullOrWhiteSpace(logstashIp))
                 throw new ArgumentNullException("logstashIp");
 
-            if (string.IsNullOrWhiteSpace(logname))
-                throw new ArgumentNullException("logname");
-
-            if (string.IsNullOrWhiteSpace(system))
+            if (string.IsNullOrWhiteSpace(currentApp))
                 throw new ArgumentNullException("system");
 
             Worker.TcpWorker.Initialize(logstashIp, logstashPort);
 
             this.logstashIp = logstashIp;
             this.logstashPort = logstashPort;
-            this.logname = logname;
-            this.system = system;
+            this.currentApp = currentApp;
+            this.currentAppVersion = currentAppVersion;
         }
 
         public void Stop()
@@ -42,84 +41,100 @@ namespace NetStash.Log
             Worker.TcpWorker.Restart();
         }
 
-        public void Verbose(string message, Dictionary<string, string> values = null)
+        public void Verbose(string message, string currentmodule, string OldValue = "", string NewValue = "")
         {
             NetStashEvent netStashEvent = new NetStashEvent();
             netStashEvent.Level = NetStashLogLevel.Verbose.ToString();
             netStashEvent.Message = message;
-            netStashEvent.Fields = values;
+            netStashEvent.Module = currentmodule;
+            netStashEvent.OldValue = OldValue;
+            netStashEvent.NewValue = NewValue;
 
             this.AddSendToLogstash(netStashEvent);
         }
 
-        public void Debug(string message, Dictionary<string, string> values = null)
+        public void Debug(string message, string currentmodule, string OldValue = "", string NewValue = "")
         {
             NetStashEvent netStashEvent = new NetStashEvent();
             netStashEvent.Level = NetStashLogLevel.Debug.ToString();
             netStashEvent.Message = message;
-            netStashEvent.Fields = values;
+            netStashEvent.Module = currentmodule;
+            netStashEvent.OldValue = OldValue;
+            netStashEvent.NewValue = NewValue;
 
             this.AddSendToLogstash(netStashEvent);
         }
 
-        public void Information(string message, Dictionary<string, string> values = null)
+        public void Information(string message, string currentmodule, string OldValue = "", string NewValue = "")
         {
             NetStashEvent netStashEvent = new NetStashEvent();
             netStashEvent.Level = NetStashLogLevel.Information.ToString();
             netStashEvent.Message = message;
-            netStashEvent.Fields = values;
+            netStashEvent.Module = currentmodule;
+            netStashEvent.OldValue = OldValue;
+            netStashEvent.NewValue = NewValue;
 
             this.AddSendToLogstash(netStashEvent);
         }
 
-        public void Warning(string message, Dictionary<string, string> values = null)
+        public void Warning(string message, string currentmodule, string OldValue = "", string NewValue = "")
         {
             NetStashEvent netStashEvent = new NetStashEvent();
             netStashEvent.Level = NetStashLogLevel.Warning.ToString();
             netStashEvent.Message = message;
-            netStashEvent.Fields = values;
+            netStashEvent.Module = currentmodule;
+            netStashEvent.OldValue = OldValue;
+            netStashEvent.NewValue = NewValue;
 
             this.AddSendToLogstash(netStashEvent);
         }
 
 
-        internal void InternalError(string message, Dictionary<string, string> values = null)
+        internal void InternalError(string message, string currentmodule, string OldValue = "", string NewValue = "")
         {
             NetStashEvent netStashEvent = new NetStashEvent();
             netStashEvent.Level = NetStashLogLevel.Error.ToString();
             netStashEvent.Message = message;
-            netStashEvent.Fields = values;
+            netStashEvent.Module = currentmodule;
+            netStashEvent.OldValue = OldValue;
+            netStashEvent.NewValue = NewValue;
 
             this.AddSendToLogstash(netStashEvent, false);
         }
 
-        public void Error(Exception exception, Dictionary<string, string> values)
+        public void Error(Exception exception, string currentmodule, string OldValue = "", string NewValue = "")
         {
             NetStashEvent netStashEvent = new NetStashEvent();
             netStashEvent.Level = NetStashLogLevel.Error.ToString();
             netStashEvent.Message = exception.Message;
             netStashEvent.ExceptionDetails = exception.StackTrace;
-            netStashEvent.Fields = values;
+            netStashEvent.Module = currentmodule;
+            netStashEvent.OldValue = OldValue;
+            netStashEvent.NewValue = NewValue;
 
             this.AddSendToLogstash(netStashEvent);
         }
 
-        public void Error(string message, Dictionary<string, string> values = null)
+        public void Error(string message, string currentmodule, string OldValue = "", string NewValue = "")
         {
             NetStashEvent netStashEvent = new NetStashEvent();
             netStashEvent.Level = NetStashLogLevel.Error.ToString();
             netStashEvent.Message = message;
-            netStashEvent.Fields = values;
+            netStashEvent.Module = currentmodule;
+            netStashEvent.OldValue = OldValue;
+            netStashEvent.NewValue = NewValue;
 
             this.AddSendToLogstash(netStashEvent);
         }
 
-        public void Fatal(string message, Dictionary<string, string> values = null)
+        public void Fatal(string message, string currentmodule, string OldValue = "", string NewValue = "")
         {
             NetStashEvent netStashEvent = new NetStashEvent();
             netStashEvent.Level = NetStashLogLevel.Fatal.ToString();
             netStashEvent.Message = message;
-            netStashEvent.Fields = values;
+            netStashEvent.Module = currentmodule;
+            netStashEvent.OldValue = OldValue;
+            netStashEvent.NewValue = NewValue;
 
             this.AddSendToLogstash(netStashEvent);
         }
@@ -128,7 +143,8 @@ namespace NetStash.Log
         {
             e.Machine = Environment.MachineName;
             e.Source = system;
-            e.Index = logname;
+            e.App = currentApp;
+            e.AppVersion = currentAppVersion;
 
             Storage.Proxy.LogProxy proxy = new Storage.Proxy.LogProxy();
             proxy.Add(e);

@@ -16,6 +16,8 @@ namespace NetStash
 
         [Newtonsoft.Json.JsonProperty(PropertyName = "exception-details")]
         public string ExceptionDetails { get; set; }
+        [Newtonsoft.Json.JsonProperty(PropertyName = "username")]
+        public string Username { get; set; }
 
         [Newtonsoft.Json.JsonProperty(PropertyName = "source")]
         public string Source { get; set; }
@@ -25,12 +27,23 @@ namespace NetStash
 
         [Newtonsoft.Json.JsonProperty(PropertyName = "machine-name")]
         public string Machine { get; set; }
+        [Newtonsoft.Json.JsonProperty(PropertyName = "machine-ip")]
+        public string MachineIP { get; set; }
 
-        [Newtonsoft.Json.JsonProperty(PropertyName = "index-name")]
-        public string Index { get; set; }
+        [Newtonsoft.Json.JsonProperty(PropertyName = "app")]
+        public string App { get; set; }
+        [Newtonsoft.Json.JsonProperty(PropertyName = "app-version")]
+        public string AppVersion { get; set; }
+        [Newtonsoft.Json.JsonProperty(PropertyName = "module")]
+        public string Module { get; set; }
 
-        [Newtonsoft.Json.JsonProperty(PropertyName = "fields")]
-        public Dictionary<string, string> Fields { get; set; }
+        //[Newtonsoft.Json.JsonProperty(PropertyName = "fields")]
+        //public Dictionary<string, string> Fields { get; set; }
+
+        [Newtonsoft.Json.JsonProperty(PropertyName = "oldvalue")]
+        public string OldValue { get; set; }
+        [Newtonsoft.Json.JsonProperty(PropertyName = "newvalue")]
+        public string NewValue { get; set; }
 
         public NetStashEvent()
         {
